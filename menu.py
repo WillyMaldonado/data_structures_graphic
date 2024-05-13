@@ -1,5 +1,5 @@
 
-import sys
+
 
 from PyQt6.QtWidgets import (QApplication, QLabel, QWidget, QLineEdit, QPushButton,
     QMessageBox, QCheckBox)
@@ -12,6 +12,7 @@ from data_structures.double_linked_list import double_list
 from data_structures.circular_list import circular_list
 from data_structures.double_circular_list import double_circular_list
 from data_structures.binary_tree import binary_tree
+from data_structures.search_binary_tree import search_tree
 
 class Menu(QWidget):
     def __init__(self):
@@ -64,6 +65,7 @@ class Menu(QWidget):
         button8.move(350,350)
         button8.setText('Search tree')
         button8.resize(150,70)
+        button8.clicked.connect(self.search_tree)
     def linked_list(self):
         self.linked_list_view = linked_list.LinkedListGUI()
         self.linked_list_view.show()
@@ -85,3 +87,6 @@ class Menu(QWidget):
     def binary_tree(self):
         self.binary_tree_view = binary_tree.BinaryTreeApp()
         self.binary_tree_view.show()
+    def search_tree(self):
+        self.search_tree_view = search_tree.SearchTreeGUI()
+        self.search_tree_view.show()

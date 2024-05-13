@@ -1,28 +1,28 @@
 from PyQt6.QtWidgets import QApplication, QMainWindow, QGraphicsView, QGraphicsScene, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QLineEdit, QLabel, QMessageBox
 from PyQt6.QtGui import QColor
-from data_structures.binary_tree.binary_node import TreeNode
+from data_structures.search_binary_tree.search_node import SearchNode
 
-class BinaryTree:
+class SearchTree:
     def __init__(self):
         self.root = None
 
-    def insert(self, data, direction):
+    def insert(self, data):
         if self.root is None:
-            self.root = TreeNode(data)
+            self.root = SearchNode(data)
         else:
-            self._insert_recursive(self.root, data, direction)
+            self._insert_recursive(self.root, data)
 
-    def _insert_recursive(self, node, data, direction):
-        if direction == "left":
+    def _insert_recursive(self, node, data):
+        if data < node.data:
             if node.left is None:
-                node.left = TreeNode(data)
+                node.left = SearchNode(data)
             else:
-                self._insert_recursive(node.left, data, direction)
-        elif direction == "right":
+                self._insert_recursive(node.left, data)
+        else:
             if node.right is None:
-                node.right = TreeNode(data)
+                node.right = SearchNode(data)
             else:
-                self._insert_recursive(node.right, data, direction)
+                self._insert_recursive(node.right, data)
 
     def search(self, data):
         return self._search_recursive(self.root, data)
@@ -81,15 +81,14 @@ class BinaryTree:
             self._inorder_traversal_recursive(node.right, result)
 
 
-class BinaryTreeApp(QMainWindow):
+class SearchTreeGUI(QMainWindow):
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle("Binary Tree")
         self.setGeometry(100, 100, 800, 600)
 
-        self.tree = BinaryTree()
-        self.direction = None  # Inicializamos direction
+        self.tree = SearchTree()
 
         self.scene = QGraphicsScene()
         self.view = QGraphicsView(self.scene)
@@ -101,8 +100,6 @@ class BinaryTreeApp(QMainWindow):
         self.insert_button = QPushButton("Insert")
         self.search_button = QPushButton("Search")
         self.delete_button = QPushButton("Delete")
-        self.left_button = QPushButton("Insert Left")
-        self.right_button = QPushButton("Insert Right")
 
         self.TreeUI()
 
@@ -115,8 +112,6 @@ class BinaryTreeApp(QMainWindow):
         insert_layout.addWidget(QLabel("Insert value:"))
         insert_layout.addWidget(self.insert_input)
         insert_layout.addWidget(self.insert_button)
-        insert_layout.addWidget(self.left_button)
-        insert_layout.addWidget(self.right_button)
 
 
         search_layout = QHBoxLayout()
@@ -141,8 +136,6 @@ class BinaryTreeApp(QMainWindow):
         self.insert_button.clicked.connect(self.insert_node)
         self.search_button.clicked.connect(self.search_node)
         self.delete_button.clicked.connect(self.delete_node)
-        self.left_button.clicked.connect(lambda: self.insert_node(direction="left"))
-        self.right_button.clicked.connect(lambda: self.insert_node(direction="right"))
 
     def redraw_tree(self):
         self.scene.clear()
@@ -155,6 +148,8 @@ class BinaryTreeApp(QMainWindow):
             circle = self.scene.addEllipse(x, y, 30, 30)
             circle.setBrush(green_color)
 
+
+
             text_item = self.scene.addText(str(node.data))
             text_item.setPos(x + 5, y + 5)
 
@@ -166,19 +161,14 @@ class BinaryTreeApp(QMainWindow):
                 line = self.scene.addLine(x + 15, y + 30, x + offset + 15, y + 100)
                 self.draw_tree_recursive(node.right, x + offset, y + 100, offset / 2)
 
-    def insert_node(self, direction=None):
+    def insert_node(self):
         try:
             value = int(self.insert_input.text())
-            self.direction = direction  # Establecemos la dirección
-            if self.direction is not None:  # Verificamos si direction está establecido
-                self.tree.insert(value, self.direction)
-                self.redraw_tree()
-                self.insert_input.clear()
-                self.direction = None  # Reiniciamos direction después de la inserción
-            else:
-                QMessageBox.warning(self, "Direction not selected", "Please select direction first.")
+            self.tree.insert(value)
+            self.redraw_tree()
+            self.insert_input.clear()
         except ValueError:
-            QMessageBox.warning(self, "Value not valid", "Insert an integer number.")
+            QMessageBox.warning(self, "Value not valid", "Insert a integer number.")
 
     def search_node(self):
         try:
@@ -189,7 +179,7 @@ class BinaryTreeApp(QMainWindow):
                 QMessageBox.warning(self, "Search failed", f"The value {value} is not on the tree.")
             self.search_input.clear()
         except ValueError:
-            QMessageBox.warning(self, "Value not valid", "Please insert an integer number.")
+            QMessageBox.warning(self, "Value not valid", "Please insert a integer number.")
 
     def delete_node(self):
         try:
