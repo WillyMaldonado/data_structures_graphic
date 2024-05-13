@@ -10,6 +10,7 @@ from data_structures.linked_list import linked_list
 from data_structures.stack import stack
 from data_structures.double_linked_list import double_list
 from data_structures.circular_list import circular_list
+from data_structures.double_circular_list import double_circular_list
 
 class Menu(QWidget):
     def __init__(self):
@@ -52,6 +53,7 @@ class Menu(QWidget):
         button6.move(350,250)
         button6.setText("Double circular list")
         button6.resize(150,70)
+        button6.clicked.connect(self.double_circular_list)
         button7 = QPushButton(self)
         button7.move(110,350)
         button7.setText('Binary tree')
@@ -75,3 +77,6 @@ class Menu(QWidget):
     def circular_list(self):
         self.circular_view = circular_list.CircularLinkedListGUI()
         self.circular_view.show()
+    def double_circular_list(self):
+        self.double_circular_view = double_circular_list.CircularDoublyLinkedListGUI()
+        self.double_circular_view.show()
