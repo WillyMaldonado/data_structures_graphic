@@ -9,6 +9,7 @@ from data_structures.queue import queue
 from data_structures.linked_list import linked_list
 from data_structures.stack import stack
 from data_structures.double_linked_list import double_list
+from data_structures.circular_list import circular_list
 
 class Menu(QWidget):
     def __init__(self):
@@ -36,6 +37,7 @@ class Menu(QWidget):
         button3.move(110,150)
         button3.resize(150,70)
         button3.setText("Circular list")
+        button3.clicked.connect(self.circular_list)
         button4 = QPushButton(self)
         button4.move(350,150)
         button4.resize(150,70)
@@ -70,3 +72,6 @@ class Menu(QWidget):
     def double_linked_list(self):
         self.double_view = double_list.DoublyLinkedListGUI()
         self.double_view.show()
+    def circular_list(self):
+        self.circular_view = circular_list.CircularLinkedListGUI()
+        self.circular_view.show()
